@@ -6,7 +6,7 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:30:07 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/06 17:37:30 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/07 08:58:28 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,9 @@ typedef struct push_swap
 	struct push_swap	*next;
 	struct push_swap	*prev;
 }	t_ps;
+
+char    **ft_split(char *str);
+void    ft_free_mem(char **av);
+int		ft_strlen(char *str);
 
 #endif

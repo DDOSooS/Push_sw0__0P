@@ -6,7 +6,7 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/07 15:52:08 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/08 23:28:53 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_ps    *ft_new_node(int number)
     return (new);
 }
 
-int    ft_push_back(t_ps   **stack, int number)
+int ft_push_back(t_ps   **stack, int number)
 {
     t_ps    *tmp;
     t_ps    *new;
@@ -69,7 +69,7 @@ int ft_parse_stack(t_ps *stack)
     return (1);
 }
 
-void ft_free_stack(t_ps *stack)
+void    ft_free_stack(t_ps *stack)
 {
     t_ps *tmp;
 
@@ -131,7 +131,7 @@ int ft_check_number(char *number)
     return (1);
 }
 
-int ft_check_number_bounds(int number)
+int ft_check_number_bounds(long number)
 {
     if (number > INT_MAX || number < INT_MIN)
         return (0);
@@ -141,19 +141,20 @@ int ft_check_number_bounds(int number)
 t_ps    *ft_gen_stack_a(char **args)
 {
     t_ps    *stack;
-    int     number;
+    long      number;
     int     i;
 
+    stack = NULL;
     i = -1;
     while (args[++i])
     {
-        if (! ft_check_number(args[i]))
+        if ( !ft_strlen(args[i])  || !ft_check_number(args[i]))
         {
             ft_free_stack(stack);
             return (NULL);
         }
         number = ft_atol(args[i]);
-        if (! ft_check_number_bounds(number) || ft_push_back(&stack, number))
+        if (! ft_check_number_bounds(number) || !ft_push_back(&stack, number))
         {
             ft_free_stack(stack);
             return (NULL);  
@@ -162,44 +163,100 @@ t_ps    *ft_gen_stack_a(char **args)
     return (stack);
 }
 
-t_ps    *ft_parse_binary_arg(char *av)
+void    ft_push_stack_back(t_ps **stack, t_ps *nested)
+{
+    t_ps    *t_tmp;
+    if (!*stack)
+    {
+        *stack = nested;
+        return ;
+    }
+    t_tmp = *stack;
+    while (t_tmp->next)
+        t_tmp = t_tmp->next;
+    t_tmp->next = nested;
+    nested->prev = t_tmp;
+}
+
+void    var_dump(char **str)
+{
+    printf("\n");
+    while (*str)
+    {
+        printf("======>(%s)<==",*str);
+        *str++;
+    }
+    printf("\n");
+}
+
+int    ft_parse_arg(t_ps **stack_a, char *av)
 {
     char    **args;
-    t_ps    *stack_a;
+    t_ps    *tmp;
     
     args = ft_split(av);
     if (!args)
-        return (NULL);
-    stack_a = ft_gen_stack_a(args);
-    ft_free_mem(args);
-    if (! stack_a)
-        return (NULL);
-    if(! ft_parse_stack(stack_a))
     {
-        ft_free_stack(stack_a);
-        return (NULL);
+        ft_free_stack(*stack_a);
+        return (0);    
     }
-    return (stack_a);
+    var_dump(args);
+    
+    tmp = ft_gen_stack_a(args);
+    ft_free_mem(args);
+    if (! tmp)
+    {
+        ft_free_stack(*stack_a);
+        return (0);
+    }
+    ft_push_stack_back(stack_a, tmp);
+    if(! ft_parse_stack(*stack_a))
+    {
+        ft_free_stack(*stack_a);
+        return (0);
+    }
+    return (1);
+}
+
+t_ps    *ft_parse_args(int ac, char **av)
+{
+    t_ps    *stack_a;
+    int     i;
+
+    i = 1;
+    stack_a = NULL;
+    while (i < ac)
+    {
+        if (!ft_parse_arg(&stack_a, av[i]))
+        {
+            printf("\n===FAILED===\n");
+            return (NULL);
+        }
+        i++;
+    }
+    return  (stack_a);
+}
+
+int ft_error()
+{
+    write(2, "Error\n", 6);
+    return (1);
+}
+
+void    ft_push_swap(t_ps *stack_a, t_ps *stack_b)
+{
+
 }
 
 int main(int ac, char **av)
 {
     t_ps    *stack_a;
     t_ps    *stack_b;
-    
-    if (ac < 2)
-        return (1);
-    if (ac == 2)
-    {
-        stack_a = ft_parse_binary_arg(av[1]);
-        if (!stack_a)
-        {
-            printf("\n======FAILED=====\n");
-            return (0);
-        }
-        else
-            printf("yes done");
-    }
+
+    stack_a = ft_parse_args(ac , av);
+    if(! stack_a)
+        return (ft_error());
+    ft_push_swap(stack_a, stack_b);
     ft_free_stack(stack_a);
     return (0);
 }
