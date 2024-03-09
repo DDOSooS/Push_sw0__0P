@@ -6,7 +6,7 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/08 23:28:53 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/09 18:47:25 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_ps    *ft_new_node(int number)
         return (NULL);
     new->integer = number;
     new->next = NULL;
-    new->prev = NULL;
+    // new->prev = NULL;
     return (new);
 }
 
@@ -45,7 +45,6 @@ int ft_push_back(t_ps   **stack, int number)
     while (tmp->next)
         tmp = tmp->next; 
     tmp->next = new;
-    new->prev= tmp;
     return (1);
 }
 
@@ -175,19 +174,19 @@ void    ft_push_stack_back(t_ps **stack, t_ps *nested)
     while (t_tmp->next)
         t_tmp = t_tmp->next;
     t_tmp->next = nested;
-    nested->prev = t_tmp;
+    // nested->prev = t_tmp;
 }
 
-void    var_dump(char **str)
-{
-    printf("\n");
-    while (*str)
-    {
-        printf("======>(%s)<==",*str);
-        *str++;
-    }
-    printf("\n");
-}
+// void    var_dump(char **str)
+// {
+//     printf("\n");
+//     while (*str)
+//     {
+//         printf("======>(%s)<==",*str);
+//         *str++;
+//     }
+//     printf("\n");
+// }
 
 int    ft_parse_arg(t_ps **stack_a, char *av)
 {
@@ -200,8 +199,7 @@ int    ft_parse_arg(t_ps **stack_a, char *av)
         ft_free_stack(*stack_a);
         return (0);    
     }
-    var_dump(args);
-    
+    // var_dump(args);
     tmp = ft_gen_stack_a(args);
     ft_free_mem(args);
     if (! tmp)
@@ -243,9 +241,191 @@ int ft_error()
     return (1);
 }
 
-void    ft_push_swap(t_ps *stack_a, t_ps *stack_b)
+void    ft_pb(t_ps  **stack_a, t_ps **stack_b)
 {
+    t_ps    *t_tmp;
 
+    t_tmp = (*stack_a);
+    *stack_a = (*stack_a)->next;
+    t_tmp->next = *stack_b;
+    *stack_b = t_tmp;
+    write(1, "pb\n", 3);
+}
+
+int ft_stack_size(t_ps  *stack)
+{
+    int counter;
+
+    counter = 0;
+    while (stack)
+    {
+        counter++;
+        stack = stack->next;
+    }
+    return (counter);
+}
+
+int ft_is_sorted(t_ps *stack)
+{
+    t_ps    *cur;
+    t_ps    *prev;
+
+    cur = stack->next;
+    prev = stack; 
+    while (cur)
+    {
+        if (prev->integer > cur->integer)
+            return (0);
+        cur = cur->next;
+        prev = prev->next;
+    }
+    return (1);
+}
+
+// void    ft_push_swap(t_ps **stack_a, t_ps **stack_b)
+// {
+//     if (ft_is_sorted(*stack_a))
+//     {
+//         printf("\n===stack a is sorted :)====\n\n");
+//         return ;
+//     }
+//     // ft_pb(stack_a, stack_b);
+//     // ft_pb(stack_a, stack_b);
+// }
+
+int ft_strcmp(char *str , char *cmp)
+{
+    int     i;
+
+    i = 0;
+    while (str[i] && cmp[i] && str[i] == cmp[i])
+        i++;
+    return (str[i] - cmp[i]);
+}
+
+void    ft_pb(t_ps **stack_b)
+{
+    t_ps    *t_tmp;
+
+    t_tmp = (*stack_b);
+    *stack_b = (*stack_b)->next;
+    t_tmp->next = NULL;
+}
+
+int ft_is_operation(char *instruction)
+{
+    char    *operation;
+    char    **args;
+    int     i;
+
+    i = 0;
+    operation = "sa sb ss pa pb ra rb rr rra rrb rrr";
+    args = ft_split(operation);
+    if (! args)
+        return (0);
+    while (args[i])
+    {
+        if (! ft_strcmp(instruction, args[i]))
+        {
+            ft_free_mem(args);
+            return (1);
+        }
+        i++;
+    }
+    ft_free_mem(args);
+    return (0);
+}
+
+void    ft_run_instruction_helper(char *instruction, t_ps **stack_a, t_ps **stack_b)
+{
+    if (!ft_strcmp(instruction, "rra"))
+        ft_rra(stack_a, stack_b);
+    else if (!ft_strcmp(instruction, "rrb"))
+        ft_rrb(stack_a, stack_b);
+    else if (!ft_strcmp(instruction, "rrr"))
+        ft_rrr(stack_a, stack_b);    
+}
+
+int    ft_run_instruction(char *instruction, t_ps **stack_a, t_ps **stack_b)
+{
+    if (! ft_is_operation(instruction))
+        return (0);
+    if (!ft_strcmp(instruction, "sa"))
+        ft_sa(stack_a, stack_b);
+    else if (!ft_strcmp(instruction, "sb"))
+        ft_sb(stack_a, stack_b);
+    else if (!ft_strcmp(instruction, "ss"))
+        ft_ss(stack_a, stack_b);
+    else if (!ft_strcmp(instruction, "pa"))
+        ft_pa(stack_a, stack_b);
+    else if (!ft_strcmp(instruction, "pa"))
+        ft_pa(stack_a, stack_b);
+    else if (!ft_strcmp(instruction, "pb"))
+        ft_pb(stack_a, stack_b);
+    else if (!ft_strcmp(instruction, "ra"))
+        ft_ra(stack_a, stack_b);
+    else if (!ft_strcmp(instruction, "rb"))
+        ft_rb(stack_a, stack_b);
+    else if (!ft_strcmp(instruction, "rr"))
+        ft_rr(stack_a, stack_b);
+    else
+        ft_run_instruction_helper(instruction, stack_a, stack_b);
+    return (1);
+}
+
+int    ft_repeat(char *instruction, int n_rep,t_ps **stack_a, t_ps **stack_b)
+{
+    int i;
+
+    i = 0;
+    while (i < n_rep)
+    {
+        if (!ft_run_instruction(instruction, stack_a, stack_b))
+            return (0);
+        i++;
+    }
+    return (1);
+}
+
+void    ft_sort_stack_b(t_ps **stack_b)
+{
+    if (! ft_is_sorted(*stack_b))
+        ft_sp(stack_b);
+}
+
+t_ps    *ft_get_cheap_cost(t_ps **stack_a, t_ps **stack_b)
+{
+     
+}
+
+void    ft_set_up_node(t_ps **stack_a, t_ps **stack_b)
+{
+    
+}
+void    ft_sort_stack(t_ps **stack_a, t_ps **stack_b)
+{
+    t_ps    *t_tmp;
+    
+    if (!*stack_b)
+        ft_repeat("pb", 2, stack_a, stack_b);
+    ft_sort_stack_b(stack_b);
+    while (ft_stack_size(stack_b) > 3)
+    {
+        t_tmp = ft_get_cheap_cost(stack_a, stack_b);
+        ft_set_up_node(stack_b, stack_a);
+    }
+    ft_sort_stack_a(stack_a);
+    ft_push_back_stack_a(stack_a, stack_b);
+}
+
+void    var_dump_stack(t_ps *stack, char c)
+{
+    printf("======stack-%c======\n", c);
+    while (stack)
+    {
+        printf("==>(%d)<==\n", stack->integer);
+        stack = stack->next;
+    }
 }
 
 int main(int ac, char **av)
@@ -256,7 +436,13 @@ int main(int ac, char **av)
     stack_a = ft_parse_args(ac , av);
     if(! stack_a)
         return (ft_error());
-    ft_push_swap(stack_a, stack_b);
+    var_dump_stack(stack_a, 'a');
+    var_dump_stack(stack_b, 'b'); 
+    printf("\n============AFTER=================\n");
+    while (!ft_is_sorted(stack_a))
+        ft_sort_stack(&stack_a, &stack_b);
+    var_dump_stack(stack_a, 'a');
+    var_dump_stack(stack_b, 'b'); 
     ft_free_stack(stack_a);
     return (0);
 }

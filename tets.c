@@ -6,31 +6,26 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 20:38:51 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/07 13:17:50 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/09 12:47:16 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <string.h>
 
+int ft_strcmp(char *str , char *cmp)
+{
+    int     i;
+
+    i = 0;
+    while (str[i] && cmp[i] && str[i] == cmp[i])
+        i++;
+    return (str[i] - cmp[i]);
+}
+
 int main(int argc, char *argv[]) {
     // Check if there are any command-line arguments
-    if (argc <= 1) {
-        printf("No command-line arguments provided.\n");
-        return 1;
-    }
-
-    // Process each argument
-    for (int i = 1; i < argc; i++) {
-        // Check if the argument is an empty string
-        if (strlen(argv[i]) == 0) {
-            printf("Error: Empty string found at position %d.\n", i);
-            return 1;
-        }
-
-        // Process the argument as needed
-        printf("Argument %d: %s\n", i, argv[i]);
-    }
-
+    printf("==>mine:%d<==", ft_strcmp("Aabdes","abde"));
+    printf("==>org :%d<==", strcmp("Aabdes","abde"));
     return 0;
 }
