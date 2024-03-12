@@ -6,7 +6,7 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/09 18:47:25 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/12 18:12:17 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -492,6 +492,7 @@ t_ps    *ft_get_cheap_cost(t_ps *stack_a, t_ps *stack_b)
 
     tmp = stack_a;
     cheap = stack_a;
+    cheap->cost = ft_count_cost(&cheap, stack_b, tmp);
     while (stack_a)
     {
         if (cheap->integer != stack_a->integer)
@@ -525,23 +526,138 @@ void    ft_set_up_node(t_ps *t_tmp, t_ps **stack_a, t_ps **stack_b)
         ft_repeat("sa",t_tmp->pa, stack_a, stack_b); 
 }
 
+int ft_get_max_position(t_ps *stack)
+{
+    t_ps    *t_tmp;
+    t_tmp = stack;
+    
+    stack = stack->next;
+    while (stack)
+    {
+        if (stack->integer > t_tmp->integer)
+            t_tmp = stack; 
+        stack = stack->next;   
+    }
+    return (ft_get_position(t_tmp, stack));
+}
+
+int ft_get_min_position(t_ps *stack)
+{
+    t_ps    *t_tmp;
+    t_tmp = stack;
+    
+    stack = stack->next;
+    while (stack)
+    {
+        if (stack->integer < t_tmp->integer)
+            t_tmp = stack; 
+        stack = stack->next;   
+    }
+    return (ft_get_position(t_tmp, stack));
+}
+
+int ft_check_stack_status(t_ps *stack)
+{
+    int status;
+    int min;
+    int max;
+
+    min = ft_get_min_position(stack);
+    max = ft_get_max_position(stack);
+    if (max  == 1 && min == 1)
+        status = 5;
+    else if (max == 0 && min == 2)
+        status = 4;
+    else if(max == 1 && min == 2)
+        status = 3;
+    else if (max == 0 && min == 1)
+        status = 2;
+    else if (max == 2 && min == 1)
+        status = 1;
+    return (status);
+}
+
 void    ft_sort_stack_a(t_ps **stack_a)
 {
-    t_ps    *min;
-    t_ps    *max;
+    int status;
+
+    if (ft_is_sorted(*stack_a))
+        return ;
+    status = ft_check_stack_status(*stack_a);
+    if (status == 1 || stack_a  == 4 || status == 5)
+        ft_sa(stack_a);
+    else if (status == 2)
+        ft_ra(stack_a);
+    else if (status == 3)
+        ft_rra(stack_a);
+    return (ft_sort_stack_a(stack_a));
+}
+
+t_ps    *ft_get_target_stack_a(t_ps *stack_a, t_ps *node)
+{
+    t_ps    *target;
+    
+    target = NULL;
+    while (stack_a)
+    {
+        if (stack_a->integer > node->integer)
+        {
+            if (target)
+                target = stack_a;
+            else
+            {
+                if (stack_a->integer > target->integer)
+                    target = stack_a;
+                if (target->integer == node->integer + 1)
+                    return (target);
+            }
+        }
+        stack_a = stack_a->next;
+    }
+    return (target);
+}
+
+t_ps    *ft_last_element(t_ps *stack)
+{
+    if (!stack)
+        return (NULL);
+    while (stack->next)
+        stack = stack->next;
+    return (stack);  
+}
+
+void    ft_bring_top(t_ps *node, t_ps **stack)
+{
+    
+}
+
+void    ft_push_stack_a(t_ps *node, t_ps **stack_a, t_ps **stack_b)
+{
+    t_ps    *t_tmp;
+    
+    if (node->integer == (*stack_a)->integer && ft_stack_size(stack_b > 1))
+        return (ft_pa(stack_a, stack_a));
+    t_tmp = ft_last_element(stack_a);
+    if (t_tmp->integer == node->integer)
+    {
+        ft_pa(stack_a, stack_b);
+        return (ft_ra(stack_a));
+    }
+    ft_bring_top(node, stack_a);
+    ft_pa(stack_a, stack_b);
+}
+
+void    ft_push_back_stack_a(t_ps **stack_a, t_ps **stack_b)
+{
     t_ps    *t_tmp;
 
-    max = (*stack_a)->next->next;
-    min = (*stack_a)->next;
-    if((*stack_a)->integer > min->integer)
+    while (*stack_b)
     {
-        min
+        t_tmp = ft_get_target_stack_a(*stack_a, *stack_b);
+         *stack_b = (*stack_a)->next;
     }
-    if (ft_is_sorted(stack_a))
-        return ;
-    if ( )
-
 }
+
 void    ft_sort_stack(t_ps **stack_a, t_ps **stack_b)
 {
     t_ps    *t_tmp;
