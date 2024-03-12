@@ -25,7 +25,8 @@ int ft_strcmp(char *str , char *cmp)
 
 int main(int argc, char *argv[]) {
     // Check if there are any command-line arguments
-    printf("==>mine:%d<==", ft_strcmp("Aabdes","abde"));
-    printf("==>org :%d<==", strcmp("Aabdes","abde"));
+    // printf("==>mine:%d<==", ft_strcmp("Aabdes","abde"));
+    // printf("==>org :%d<==", strcmp("Aabdes","abde"));
+    printf("%d", 5 / 2);
     return 0;
 }
