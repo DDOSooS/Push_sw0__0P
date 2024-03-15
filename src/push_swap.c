@@ -581,7 +581,7 @@ void    ft_sort_stack_a(t_ps **stack_a)
 {
     int status;
 
-    if (ft_is_sorted(*stack_a))
+    if ( ft_is_sorted(*stack_a))
         return ;
     status = ft_check_stack_status(*stack_a);
     if (status == 1 || stack_a  == 4 || status == 5)
@@ -626,26 +626,57 @@ t_ps    *ft_last_element(t_ps *stack)
     return (stack);  
 }
 
-void    ft_bring_top(t_ps *node, t_ps **stack)
+void    ft_bring_top(t_ps *node, t_ps **stack_a, t_ps **stack_b)
 {
-    
+    int     pos;
+	int		size;
+    int		moves;
+
+	pos = ft_get_position(node, stack_a);
+	size = ft_stack_size(stack_a);
+	if (pos > size / 2)
+	{
+		moves = size - pos + 1;
+		ft_repeat("rra", moves, stack_a, stack_b);
+		ft_pa(stack_a, stack_b);
+		return ;
+	}
+	else
+	{
+		moves = size - 1;
+		ft_repeat("ra", moves, stack_a, stack_b);
+		ft_pa(stack_a, stack_b);
+		return ;
+	}	
 }
 
-void    ft_push_stack_a(t_ps *node, t_ps **stack_a, t_ps **stack_b)
+
+
+void    ft_set_up_node_stack_a(t_ps *node, t_ps **stack_a, t_ps **stack_b)
 {
     t_ps    *t_tmp;
-    
-    if (node->integer == (*stack_a)->integer && ft_stack_size(stack_b > 1))
-        return (ft_pa(stack_a, stack_a));
+    int     flag;
+
+    if ((*stack_a)->integer == node->integer)
+        return (ft_pa(stack_a, stack_b));
     t_tmp = ft_last_element(stack_a);
     if (t_tmp->integer == node->integer)
     {
         ft_pa(stack_a, stack_b);
-        return (ft_ra(stack_a));
+        ft_ra(stack_a, stack_b);
+        return ;
     }
-    ft_bring_top(node, stack_a);
-    ft_pa(stack_a, stack_b);
+    ft_bring_top(node, stack_a, stack_b);
+	ft_sort_stackk(stack_a);
 }
+
+/*
+    check if the node value is the max value -> push it back of this list
+    check if the node value is the min value -> push it intead of the head of the list
+    else
+        check if the target in the top  of the list -> ra 
+        check if the target in the bottom of the list -> rra
+*/
 
 void    ft_push_back_stack_a(t_ps **stack_a, t_ps **stack_b)
 {
@@ -654,7 +685,8 @@ void    ft_push_back_stack_a(t_ps **stack_a, t_ps **stack_b)
     while (*stack_b)
     {
         t_tmp = ft_get_target_stack_a(*stack_a, *stack_b);
-         *stack_b = (*stack_a)->next;
+        ft_set_up_node_stack_a(t_tmp, stack_a, stack_b);
+        *stack_b = (*stack_a)->next;
     }
 }
 
