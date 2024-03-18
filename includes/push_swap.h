@@ -6,7 +6,7 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:30:07 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/09 18:26:56 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/18 02:13:21 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
-
+# include <stdio.h>
+# include <limits.h>
 typedef struct push_swap
 {
 	int					integer;

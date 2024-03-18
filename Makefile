@@ -6,14 +6,14 @@ CFLAGS = -Wall -Wextra -Werror
 
 RM = rm -rf
 
-SRC = src/push_swap.c libft/ft_split.c
+SRC = src/ps.c libft/ft_split.c
 
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS)   $^ -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
