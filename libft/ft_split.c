@@ -6,7 +6,7 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 17:20:06 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/09 09:51:17 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/18 22:32:45 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,58 +56,6 @@ int ft_count_args(char *str , char c)
     }
     return (counter);
 }
-
-// char    *ft_gen_arg(char *src, char c)
-// {
-//     int     i;
-//     int     len;
-//     char    *dest;
-
-    
-//     i = 0;
-//     len = 0;
-//     while (src[len] && src[len] != c)
-//         len++;
-//     printf("==>%d==\n",len);
-//     dest = (char *)malloc(sizeof(char) * (len + 1));
-//     if (!dest)
-//         return (NULL);
-//     while (i < len)
-//     {
-//         dest[i] = src[i];
-//         i++;
-//     }
-//     dest[i] = '\0';
-//     return (dest);
-// }
-
-// int ft_gen_args(char **av, char *str, char c)
-// {
-//     int     i;
-//     int     k;
-
-//     i = 0;
-//     k = 0;
-//     while (str[i])
-//     {
-//         while (str[i] && str[i] == c)
-//             i++;
-//         if (str[i])
-//         {
-//             av[k] = ft_gen_arg(&str[i], c);
-//             if (!av[k])
-//             {
-//                 ft_free_mem(av);
-//                 return (0);
-//             }
-//         }
-//             i += ft_strlen(av[k]);
-//         k++;
-//     }
-//     av[k] = NULL;
-//     return (1);
-// }
-
 
 char	*ft_gen_arg(char *str, int len)
 {

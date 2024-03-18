@@ -6,7 +6,7 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/18 02:15:20 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/18 22:34:50 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,13 +127,15 @@ int ft_check_number(char *number)
             return (0);
         i++;
     }
-    return (1);
+     return (1);
 }
 
 int ft_check_number_bounds(long number)
 {
-    if (number > INT_MAX || number < INT_MAX)
+    if (number > INT_MAX || number < INT_MIN)
+    {
         return (0);
+    }
     return (1);
 }
 
@@ -155,7 +157,7 @@ t_ps    *ft_gen_stack_a(char **args)
         number = ft_atol(args[i]);
         if (! ft_check_number_bounds(number) || !ft_push_back(&stack, number))
         {
-            ft_free_stack(stack);
+             ft_free_stack(stack);
             return (NULL);  
         }
     }
@@ -177,18 +179,19 @@ void    ft_push_stack_back(t_ps **stack, t_ps *nested)
     // nested->prev = t_tmp;
 }
 
+void    var_dump(char **str)
+{
+    printf("\n");
+    int i;
 
-
-// void    var_dump(char **str)
-// {
-//     printf("\n");
-//     while (*str)
-//     {
-//         printf("======>(%s)<==",*str);
-//         *str++;
-//     }
-//     printf("\n");
-// }
+    i = 0;
+    while (str[i])
+    {
+        printf("======>(%s)<==",str[i]);
+        i++;
+    }
+    printf("\n");
+}
 
 int    ft_parse_arg(t_ps **stack_a, char *av)
 {
@@ -201,17 +204,18 @@ int    ft_parse_arg(t_ps **stack_a, char *av)
         ft_free_stack(*stack_a);
         return (0);    
     }
+    // var_dump(args);
     tmp = ft_gen_stack_a(args);
     ft_free_mem(args);
     if (! tmp)
     {
-        ft_free_stack(*stack_a);
+         ft_free_stack(*stack_a);
         return (0);
     }
     ft_push_stack_back(stack_a, tmp);
     if(! ft_parse_stack(*stack_a))
     {
-        ft_free_stack(*stack_a);
+         ft_free_stack(*stack_a);
         return (0);
     }
     return (1);
@@ -253,19 +257,15 @@ void    var_dump_stack(t_ps *stack, char c)
 }
 
 
-
 int main(int ac, char **av)
 {
     t_ps    *stack_a;
-    // t_ps    *stack;
 
-    // stack_b = NULL;
     stack_a = ft_parse_args(ac , av);
     if(! stack_a)
         return (ft_error());
     printf("\n============bfore=================\n");
     var_dump_stack(stack_a,'a');
-    // var_dump_stack(stack_b,'b'); 
     ft_free_stack(stack_a);
     return (0);
 }

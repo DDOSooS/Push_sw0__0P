@@ -6,7 +6,7 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 20:38:51 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/18 00:35:52 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/18 22:31:32 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,7 @@ int main(int argc, char *argv[]) {
     // Check if there are any command-line arguments
     // printf("==>mine:%d<==", ft_strcmp("Aabdes","abde"));
     // printf("==>org :%d<==", strcmp("Aabdes","abde"));
-    t_ps *stack;
-
-    stack = ft_parse_args(argc , argv);
-    printf("===> min index:%d <===", ft_get_min_position(stack));
-    printf("%d", 5 / 2);
+    
+    
     return 0;
 }
