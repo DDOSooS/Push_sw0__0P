@@ -6,7 +6,7 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/12 18:12:17 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/17 23:53:18 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,17 +245,6 @@ int ft_error()
     return (1);
 }
 
-void    ft_pb(t_ps  **stack_a, t_ps **stack_b)
-{
-    t_ps    *t_tmp;
-
-    t_tmp = (*stack_a);
-    *stack_a = (*stack_a)->next;
-    t_tmp->next = *stack_b;
-    *stack_b = t_tmp;
-    write(1, "pb\n", 3);
-}
-
 int ft_stack_size(t_ps  *stack)
 {
     int counter;
@@ -307,14 +296,48 @@ int ft_strcmp(char *str , char *cmp)
     return (str[i] - cmp[i]);
 }
 
-void    ft_pb(t_ps **stack_b)
+t_ps    *ft_last_element(t_ps *stack)
+{
+    if (!stack)
+        return (NULL);
+    while (stack->next)
+        stack = stack->next;
+    return (stack);  
+}
+
+void    ft_sa(t_ps **stack_a)
 {
     t_ps    *t_tmp;
-
-    t_tmp = (*stack_b);
-    *stack_b = (*stack_b)->next;
-    t_tmp->next = NULL;
+    t_ps    *t_tmp1;
+    
+    t_tmp = (*stack_a)->next;
+    t_tmp1 = *stack_a;
+    t_tmp1->next = t_tmp->next;
+    t_tmp->next = t_tmp1;
+    *stack_a = t_tmp;
+    write(1, "sa\n", 3);
 }
+
+void    ft_sb(t_ps **stack_b)
+{
+    t_ps    *t_tmp;
+    t_ps    *t_tmp1;
+    
+    t_tmp = (*stack_b)->next;
+    t_tmp1 = *stack_b;
+    t_tmp1->next = t_tmp->next;
+    t_tmp->next = t_tmp1;
+    *stack_b = t_tmp;
+    write(1, "sb\n", 3);
+}
+
+void    ft_ss(t_ps *stack_a, t_ps *stack_b)
+{
+    ft_sa(stack_a);
+    ft_sb(stack_b);
+    write(1, "ss\n", 3);
+}
+
 
 int ft_is_operation(char *instruction)
 {
@@ -340,12 +363,70 @@ int ft_is_operation(char *instruction)
     return (0);
 }
 
+void	ft_rra(t_ps **stack_a)
+{
+	t_ps	*t_tmp;
+	t_ps	*t_tmp1;
+	
+	t_tmp1 = *stack_a;
+	t_tmp = ft_last_element(*stack_a);
+	while (t_tmp1->next->next)
+		t_tmp = t_tmp1->next;
+	t_tmp1->next = NULL;
+	t_tmp->next = t_tmp1;
+	*stack_a = t_tmp1;
+    write(1, "rra\n", 4);
+}
+
+void	ft_rrb(t_ps **stack_b)
+{
+	t_ps	*t_tmp;
+	t_ps	*t_tmp1;
+	
+	t_tmp1 = *stack_b;
+	t_tmp = ft_last_element(*stack_b);
+	while (t_tmp1->next->next)
+		t_tmp = t_tmp1->next;
+	t_tmp1->next = NULL;
+	t_tmp->next = t_tmp1;
+	*stack_b = t_tmp1;
+    write(1, "rrb\n", 4);
+}
+
+void    ft_pb(t_ps **stack_a, t_ps **stack_b)
+{
+    t_ps    *t_tmp;
+
+	t_tmp = *stack_a;
+	*stack_a = t_tmp->next;
+	t_tmp->next = *stack_b;
+	*stack_b = t_tmp;
+    write(1, "pb\n", 3);
+}
+
+void    ft_rrr(t_ps **stack_a, t_ps **stack_b)
+{
+    ft_rra(stack_a);
+    ft_rrb(stack_b);
+    write(1, "rrr\n", 4);
+}
+
+void    ft_pa(t_ps **stack_a, t_ps **stack_b)
+{
+    t_ps    *t_tmp;
+
+	t_tmp = *stack_b;
+	*stack_b = t_tmp->next;
+	t_tmp->next = *stack_a;
+	*stack_a = t_tmp;
+    write(1, "pa\n", 3);
+}
 void    ft_run_instruction_helper(char *instruction, t_ps **stack_a, t_ps **stack_b)
 {
     if (!ft_strcmp(instruction, "rra"))
-        ft_rra(stack_a, stack_b);
+        ft_rra(stack_a);
     else if (!ft_strcmp(instruction, "rrb"))
-        ft_rrb(stack_a, stack_b);
+        ft_rrb(stack_a);
     else if (!ft_strcmp(instruction, "rrr"))
         ft_rrr(stack_a, stack_b);    
 }
@@ -355,9 +436,9 @@ int    ft_run_instruction(char *instruction, t_ps **stack_a, t_ps **stack_b)
     if (! ft_is_operation(instruction))
         return (0);
     if (!ft_strcmp(instruction, "sa"))
-        ft_sa(stack_a, stack_b);
+        ft_sa(stack_a);
     else if (!ft_strcmp(instruction, "sb"))
-        ft_sb(stack_a, stack_b);
+        ft_sb(stack_a);
     else if (!ft_strcmp(instruction, "ss"))
         ft_ss(stack_a, stack_b);
     else if (!ft_strcmp(instruction, "pa"))
@@ -460,13 +541,21 @@ int ft_count_target_moves(t_ps *target, t_ps *stack_b)
 t_ps    *ft_get_target(int number, t_ps *stack_b)
 {
     t_ps    *target;
+    int     dif;
 
-    target = stack_b;
+    target = NULL;
+    dif = 0;
     while (stack_b)
     {
-        if (stack_b->integer != target->integer)
-            if (stack_b->integer < target->integer)
-                target =  stack_b;
+        if (stack_b->integer < number)
+        {
+            if(dif)
+                dif = number - stack_b->integer;
+            else
+                dif = number - stack_b->integer;
+            if (dif > number - stack_b->integer)
+                target = stack_b;
+        }
         stack_b = stack_b->next;
     }
     return(target);
@@ -505,6 +594,7 @@ t_ps    *ft_get_cheap_cost(t_ps *stack_a, t_ps *stack_b)
     }
     return (cheap);
 }
+
 
 void    ft_set_up_node(t_ps *t_tmp, t_ps **stack_a, t_ps **stack_b)
 {
@@ -584,7 +674,7 @@ void    ft_sort_stack_a(t_ps **stack_a)
     if ( ft_is_sorted(*stack_a))
         return ;
     status = ft_check_stack_status(*stack_a);
-    if (status == 1 || stack_a  == 4 || status == 5)
+    if (status == 1 || status  == 4 || status == 5)
         ft_sa(stack_a);
     else if (status == 2)
         ft_ra(stack_a);
@@ -617,14 +707,6 @@ t_ps    *ft_get_target_stack_a(t_ps *stack_a, t_ps *node)
     return (target);
 }
 
-t_ps    *ft_last_element(t_ps *stack)
-{
-    if (!stack)
-        return (NULL);
-    while (stack->next)
-        stack = stack->next;
-    return (stack);  
-}
 
 void    ft_bring_top(t_ps *node, t_ps **stack_a, t_ps **stack_b)
 {
@@ -632,8 +714,8 @@ void    ft_bring_top(t_ps *node, t_ps **stack_a, t_ps **stack_b)
 	int		size;
     int		moves;
 
-	pos = ft_get_position(node, stack_a);
-	size = ft_stack_size(stack_a);
+	pos = ft_get_position(node, *stack_a);
+	size = ft_stack_size(*stack_a);
 	if (pos > size / 2)
 	{
 		moves = size - pos + 1;
@@ -651,15 +733,13 @@ void    ft_bring_top(t_ps *node, t_ps **stack_a, t_ps **stack_b)
 }
 
 
-
 void    ft_set_up_node_stack_a(t_ps *node, t_ps **stack_a, t_ps **stack_b)
 {
     t_ps    *t_tmp;
-    int     flag;
 
     if ((*stack_a)->integer == node->integer)
         return (ft_pa(stack_a, stack_b));
-    t_tmp = ft_last_element(stack_a);
+    t_tmp = ft_last_element(*stack_a);
     if (t_tmp->integer == node->integer)
     {
         ft_pa(stack_a, stack_b);
@@ -667,7 +747,8 @@ void    ft_set_up_node_stack_a(t_ps *node, t_ps **stack_a, t_ps **stack_b)
         return ;
     }
     ft_bring_top(node, stack_a, stack_b);
-	ft_sort_stackk(stack_a);
+	while (!ft_is_sorted(*stack_a))
+		ft_rra(stack_a);
 }
 
 /*
@@ -690,31 +771,31 @@ void    ft_push_back_stack_a(t_ps **stack_a, t_ps **stack_b)
     }
 }
 
-void    ft_sort_stack(t_ps **stack_a, t_ps **stack_b)
+void    ft_push_swap(t_ps **stack_a, t_ps **stack_b)
 {
     t_ps    *t_tmp;
     
     if (!*stack_b)
         ft_repeat("pb", 2, stack_a, stack_b);
     ft_sort_stack_b(stack_b);
-    while (ft_stack_size(stack_b) > 3)
+    while (ft_stack_size(*stack_b) > 3)
     {
-        t_tmp = ft_get_cheap_cost(stack_a, stack_b);
+        t_tmp = ft_get_cheap_cost(*stack_a, *stack_b);
         ft_set_up_node(t_tmp, stack_b, stack_a);
     }
     ft_sort_stack_a(stack_a);
     ft_push_back_stack_a(stack_a, stack_b);
 }
 
-// void    var_dump_stack(t_ps *stack, char c)
-// {
-//     printf("======stack-%c======\n", c);
-//     while (stack)
-//     {
-//         printf("==>(%d)<==\n", stack->integer);
-//         stack = stack->next;
-//     }
-// }
+void    var_dump_stack(t_ps *stack, char c)
+{
+    printf("======stack-%c======\n", c);
+    while (stack)
+    {
+        printf("==>(%d)<==\n", stack->integer);
+        stack = stack->next;
+    }
+}
 
 int main(int ac, char **av)
 {
@@ -728,7 +809,7 @@ int main(int ac, char **av)
     var_dump_stack(stack_b, 'b'); 
     printf("\n============AFTER=================\n");
     while (!ft_is_sorted(stack_a))
-        ft_sort_stack(&stack_a, &stack_b);
+        ft_push_swap(&stack_a, &stack_b);
     var_dump_stack(stack_a, 'a');
     var_dump_stack(stack_b, 'b'); 
     ft_free_stack(stack_a);
