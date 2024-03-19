@@ -6,11 +6,16 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/19 02:51:01 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/19 03:12:45 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/push_swap.h"
+
+
+/*
+    libft_functions
+*/
 
 t_ps    *ft_new_node(int number)
 {
@@ -45,26 +50,6 @@ int ft_push_back(t_ps   **stack, int number)
     while (tmp->next)
         tmp = tmp->next; 
     tmp->next = new;
-    return (1);
-}
-
-int ft_parse_stack(t_ps *stack)
-{
-    t_ps    *current;
-    t_ps    *next_n;
-
-    current = stack;
-    while (current)
-    {
-        next_n = current->next;
-        while (next_n)
-        {
-            if (current->integer == next_n->integer)
-                return (0); 
-            next_n = next_n->next;
-        }
-        current = current->next;
-    }
     return (1);
 }
 
@@ -111,6 +96,69 @@ long int    ft_atol( char *str)
 	}
 	res  = res * negative;
 	return res;
+}
+
+t_ps    *ft_last_node(t_ps *list)
+{
+    while (list->next)
+        list = list->next;
+    return (list);
+}
+
+int ft_is_sort(t_ps *stack)
+{
+    t_ps    *cur;
+    t_ps    *prev;
+
+    prev = stack;
+    cur = stack->next;
+    while (cur->next)
+    {
+        if (prev->integer > cur->integer)
+            return (0);
+        cur = cur->next;
+        prev = prev->next;
+    }
+    return (1);
+}
+
+int ft_stack_len(t_ps *stack)
+{
+    int len;
+
+    len = 0;
+    while (stack)
+    {
+        len++;
+        stack = stack->next;
+    }
+    return (len);
+}
+/*
+    end of libft_functions
+*/
+/*
+    parsing cmd line argument
+*/
+
+int ft_parse_stack(t_ps *stack)
+{
+    t_ps    *current;
+    t_ps    *next_n;
+
+    current = stack;
+    while (current)
+    {
+        next_n = current->next;
+        while (next_n)
+        {
+            if (current->integer == next_n->integer)
+                return (0); 
+            next_n = next_n->next;
+        }
+        current = current->next;
+    }
+    return (1);
 }
 
 int ft_check_number(char *number)
@@ -240,18 +288,9 @@ t_ps    *ft_parse_args(int ac, char **av)
 }
 
 /*
-    libft_functions
+    end of parsing cmd line argument
 */
-t_ps    *ft_last_node(t_ps *list)
-{
-    while (list->next)
-        list = list->next;
-    return (list);
-}
 
-/*
-    end of libft_functions
-*/
 
 /*
     the recomonded operation of push swap
@@ -398,11 +437,30 @@ void    ft_rrr(t_ps **stack_a, t_ps **stack_b)
     start of the sorting algorith 
 */
 
+void    ft_push_stack_b(t_ps **stack_a, t_ps **stack_b)
+{
+    
+}
+
+void    ft_push_swap(t_ps **stack_a, t_ps **stack_b)
+{
+    ft_pb(stack_a, stack_b, 1);
+    ft_pb(stack_a, stack_b, 1);
+    if (! ft_is_sort(stack_b))
+        ft_sb(stack_b, 1);
+    while (ft_stack_len(*stack_a) > 3)
+        ft_push_stack_b(stack_a, stack_b);
+    ft_sort_stack_a(stack_a);
+    ft_push_stack_back_a(stack_a, stack_b);  
+}
 
 /*
     end of sorting stack
 */
 
+/*
+    debuging function
+*/
 void    var_dump_stack(t_ps *stack, char c)
 {
     printf("======stack-%c======\n", c);
@@ -412,11 +470,9 @@ void    var_dump_stack(t_ps *stack, char c)
         stack = stack->next;
     }
 }
-
-void    ft_push_swap(t_ps **stack_a, t_ps **stack_b)
-{
-       
-}
+/*
+    end of debuging pushing
+*/
 
 int main(int ac, char **av)
 {
