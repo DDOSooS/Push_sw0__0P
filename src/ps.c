@@ -6,7 +6,7 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/18 22:34:50 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/19 01:42:28 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ void    ft_free_stack(t_ps *stack)
 
     if (!stack)
         return ;
-
     while (stack)
     {
         tmp = stack->next;
@@ -240,11 +239,151 @@ t_ps    *ft_parse_args(int ac, char **av)
     return  (stack_a);
 }
 
-int ft_error()
+/*
+    libft_functions
+*/
+t_ps    *ft_last_node(t_ps *list)
 {
-    write(2, "error\n", 6);
-    return (1);
+    while (list->next)
+        list = list->next;
+    return (list);
 }
+
+/*
+    end of libft_functions
+*/
+
+/*
+    the recomonded operation of push swap
+*/
+
+void    ft_pa(t_ps **stack_a, t_ps **stack_b)
+{
+    t_ps    *t_tmp;
+
+    t_tmp = *stack_b;
+    *stack_b = t_tmp->next;
+    t_tmp->next = *stack_a;
+    *stack_a = t_tmp; 
+}
+
+void    ft_pb(t_ps **stack_a , t_ps **stack_b)
+{
+    t_ps    *t_tmp;
+
+    t_tmp = *stack_a;
+    *stack_a = t_tmp->next;
+    t_tmp->next = *stack_b;
+    *stack_b = t_tmp; 
+}
+
+void    ft_sa(t_ps **stack_a)
+{
+    t_ps    *t_tmp;
+    t_ps    *t_stmp;
+
+    t_tmp = (*stack_a);//1
+    t_stmp = (*stack_a)->next;//2
+    t_tmp->next = (*stack_a)->next->next;//1->3->4->5
+    t_stmp->next = t_tmp;//2->1->3->4->5
+    *stack_a = t_stmp;
+}
+
+void    ft_sb(t_ps **stack_b)
+{
+    t_ps    *t_tmp;
+    t_ps    *t_stmp;
+
+    t_tmp = (*stack_b);//1
+    t_stmp = (*stack_b)->next;//2
+    t_tmp->next = (*stack_b)->next->next;//1->3->4->5
+    t_stmp->next = t_tmp;//2->1->3->4->5
+    *stack_b = t_stmp;
+    
+}
+
+void    ft_ss(t_ps **stack_a, t_ps **stack_b)
+{
+    ft_sa(stack_a);
+    ft_sb(stack_b);
+}
+
+void    ft_ra(t_ps **stack_a)
+{
+    t_ps    *t_tmp;
+    t_ps    *t_stmp;
+
+    t_tmp = (*stack_a)->next;
+    t_stmp = ft_last_node(*stack_a);
+    t_stmp->next = (*stack_a);
+    t_stmp->next->next = NULL;
+    *stack_a = t_tmp;
+}
+
+void    ft_rb(t_ps **stack_b)
+{
+    t_ps    *t_tmp;
+    t_ps    *t_stmp;
+
+    t_tmp = (*stack_b)->next;
+    t_stmp = ft_last_node(*stack_b);
+    t_stmp->next = (*stack_b);
+    t_stmp->next->next = NULL;
+    *stack_b = t_tmp;
+}
+
+void    ft_rr(t_ps **stack_a, t_ps **stack_b)
+{
+    ft_ra(stack_a);
+    ft_ra(stack_b);
+}
+
+void    ft_rra(t_ps **stack_a)
+{
+    t_ps    *t_tmp;
+    t_ps    *t_stmp;
+    
+    t_tmp = *stack_a;
+    t_stmp = ft_last_node(*stack_a);
+    while (t_tmp->next->next)
+        t_tmp = t_tmp->next;
+    t_tmp->next = NULL;
+    t_stmp->next = *stack_a;
+    *stack_a = t_stmp;
+}
+
+void    ft_rrb(t_ps **stack_b)
+{
+    t_ps    *t_tmp;
+    t_ps    *t_stmp;
+    
+    t_tmp = *stack_b;
+    t_stmp = ft_last_node(*stack_b);
+    while (t_tmp->next->next)
+        t_tmp = t_tmp->next;
+    t_tmp->next = NULL;
+    t_stmp->next = *stack_b;
+    *stack_b = t_stmp;
+}
+
+void    ft_rrr(t_ps **stack_a, t_ps **stack_b)
+{
+    ft_rra(stack_a);
+    ft_rrb(stack_b);
+}
+/*
+    end of valid operation
+*/
+
+
+/*
+    start of the sorting algorith 
+*/
+
+
+/*
+    end of sorting stack
+*/
 
 void    var_dump_stack(t_ps *stack, char c)
 {
@@ -260,12 +399,34 @@ void    var_dump_stack(t_ps *stack, char c)
 int main(int ac, char **av)
 {
     t_ps    *stack_a;
-
+    t_ps    *stack_b;
+    
     stack_a = ft_parse_args(ac , av);
-    if(! stack_a)
-        return (ft_error());
-    printf("\n============bfore=================\n");
-    var_dump_stack(stack_a,'a');
+    if(! stack_a) 
+    {
+        write(2, "error\n", 6);
+        return (1);   
+    }
+
+    printf("\n============after1=================\n");
+    // ft_pb(&stack_a, &stack_b);
+    // ft_pb(&stack_a, &stack_b);
+    var_dump_stack(stack_a, 'a');
+    // var_dump_stack(stack_b, 'b');
+    printf("\n============after2=========================================\n");
+    // ft_pa(&stack_a, &stack_b);
+    // ft_pa(&stack_a, &stack_b);
+    // var_dump_stack(stack_a, 'a');
+    // var_dump_stack(stack_b, 'b');
+    // ft_sa(&stack_a);
+    ft_ra(&stack_a);
+    ft_ra(&stack_a);
+    ft_ra(&stack_a);
+    ft_ra(&stack_a);
+    // ft_ra(&stack_a);
+    var_dump_stack(stack_a, 'a');
+    printf("\n============after3=========================================\n");
+    // var_dump_stack(stack_a, 'a');
     ft_free_stack(stack_a);
     return (0);
 }
