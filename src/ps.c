@@ -6,7 +6,7 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/19 01:42:28 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/19 02:51:01 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,7 +257,7 @@ t_ps    *ft_last_node(t_ps *list)
     the recomonded operation of push swap
 */
 
-void    ft_pa(t_ps **stack_a, t_ps **stack_b)
+void    ft_pa(t_ps **stack_a, t_ps **stack_b, int flag)
 {
     t_ps    *t_tmp;
 
@@ -265,9 +265,11 @@ void    ft_pa(t_ps **stack_a, t_ps **stack_b)
     *stack_b = t_tmp->next;
     t_tmp->next = *stack_a;
     *stack_a = t_tmp; 
+    if (flag)
+        write(1, "pa\n", 3);
 }
 
-void    ft_pb(t_ps **stack_a , t_ps **stack_b)
+void    ft_pb(t_ps **stack_a , t_ps **stack_b, int flag)
 {
     t_ps    *t_tmp;
 
@@ -275,9 +277,11 @@ void    ft_pb(t_ps **stack_a , t_ps **stack_b)
     *stack_a = t_tmp->next;
     t_tmp->next = *stack_b;
     *stack_b = t_tmp; 
+    if (flag)
+        write(1, "pb\n", 3);
 }
 
-void    ft_sa(t_ps **stack_a)
+void    ft_sa(t_ps **stack_a, int flag)
 {
     t_ps    *t_tmp;
     t_ps    *t_stmp;
@@ -287,9 +291,11 @@ void    ft_sa(t_ps **stack_a)
     t_tmp->next = (*stack_a)->next->next;//1->3->4->5
     t_stmp->next = t_tmp;//2->1->3->4->5
     *stack_a = t_stmp;
+    if (flag)
+        write(1, "sa\n", 3);
 }
 
-void    ft_sb(t_ps **stack_b)
+void    ft_sb(t_ps **stack_b, int flag)
 {
     t_ps    *t_tmp;
     t_ps    *t_stmp;
@@ -299,16 +305,18 @@ void    ft_sb(t_ps **stack_b)
     t_tmp->next = (*stack_b)->next->next;//1->3->4->5
     t_stmp->next = t_tmp;//2->1->3->4->5
     *stack_b = t_stmp;
-    
+    if (flag)
+        write(1, "sb\n", 3);    
 }
 
 void    ft_ss(t_ps **stack_a, t_ps **stack_b)
 {
-    ft_sa(stack_a);
-    ft_sb(stack_b);
+    ft_sa(stack_a, 0);
+    ft_sb(stack_b, 0);
+    write(1, "ss\n", 1);
 }
 
-void    ft_ra(t_ps **stack_a)
+void    ft_ra(t_ps **stack_a, int flag)
 {
     t_ps    *t_tmp;
     t_ps    *t_stmp;
@@ -318,9 +326,11 @@ void    ft_ra(t_ps **stack_a)
     t_stmp->next = (*stack_a);
     t_stmp->next->next = NULL;
     *stack_a = t_tmp;
+    if (flag)
+        write(1, "ra\n", 3);
 }
 
-void    ft_rb(t_ps **stack_b)
+void    ft_rb(t_ps **stack_b, int flag)
 {
     t_ps    *t_tmp;
     t_ps    *t_stmp;
@@ -330,15 +340,18 @@ void    ft_rb(t_ps **stack_b)
     t_stmp->next = (*stack_b);
     t_stmp->next->next = NULL;
     *stack_b = t_tmp;
+    if (flag)
+        write(1, "rb\n", 3);
 }
 
 void    ft_rr(t_ps **stack_a, t_ps **stack_b)
 {
-    ft_ra(stack_a);
-    ft_ra(stack_b);
+    ft_ra(stack_a, 0);
+    ft_ra(stack_b, 0);
+    write(1, "rr\n", 3);
 }
 
-void    ft_rra(t_ps **stack_a)
+void    ft_rra(t_ps **stack_a, int flag)
 {
     t_ps    *t_tmp;
     t_ps    *t_stmp;
@@ -350,9 +363,11 @@ void    ft_rra(t_ps **stack_a)
     t_tmp->next = NULL;
     t_stmp->next = *stack_a;
     *stack_a = t_stmp;
+    if (flag)
+        write(1, "rra\n", 4);
 }
 
-void    ft_rrb(t_ps **stack_b)
+void    ft_rrb(t_ps **stack_b, int flag)
 {
     t_ps    *t_tmp;
     t_ps    *t_stmp;
@@ -364,12 +379,15 @@ void    ft_rrb(t_ps **stack_b)
     t_tmp->next = NULL;
     t_stmp->next = *stack_b;
     *stack_b = t_stmp;
+    if (flag)
+        write(1, "rrb\n", 4);
 }
 
 void    ft_rrr(t_ps **stack_a, t_ps **stack_b)
 {
-    ft_rra(stack_a);
-    ft_rrb(stack_b);
+    ft_rra(stack_a, 0);
+    ft_rrb(stack_b, 0);
+    write(1, "rrr\n", 1);
 }
 /*
     end of valid operation
@@ -395,6 +413,10 @@ void    var_dump_stack(t_ps *stack, char c)
     }
 }
 
+void    ft_push_swap(t_ps **stack_a, t_ps **stack_b)
+{
+       
+}
 
 int main(int ac, char **av)
 {
@@ -407,26 +429,8 @@ int main(int ac, char **av)
         write(2, "error\n", 6);
         return (1);   
     }
-
-    printf("\n============after1=================\n");
-    // ft_pb(&stack_a, &stack_b);
-    // ft_pb(&stack_a, &stack_b);
-    var_dump_stack(stack_a, 'a');
-    // var_dump_stack(stack_b, 'b');
-    printf("\n============after2=========================================\n");
-    // ft_pa(&stack_a, &stack_b);
-    // ft_pa(&stack_a, &stack_b);
-    // var_dump_stack(stack_a, 'a');
-    // var_dump_stack(stack_b, 'b');
-    // ft_sa(&stack_a);
-    ft_ra(&stack_a);
-    ft_ra(&stack_a);
-    ft_ra(&stack_a);
-    ft_ra(&stack_a);
-    // ft_ra(&stack_a);
-    var_dump_stack(stack_a, 'a');
-    printf("\n============after3=========================================\n");
-    // var_dump_stack(stack_a, 'a');
+    if (!ft_is_sort(stack_a))
+        ft_push_swap(&stack_a, &stack_b);
     ft_free_stack(stack_a);
     return (0);
 }
