@@ -6,12 +6,13 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/19 03:12:45 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/20 05:49:46 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/push_swap.h"
 
+void    var_dump_stack(t_ps *stack, char c);
 
 /*
     libft_functions
@@ -134,6 +135,22 @@ int ft_stack_len(t_ps *stack)
     }
     return (len);
 }
+
+int ft_get_position(t_ps *node, t_ps *stack)
+{
+    int index;
+
+    index = 0;
+    while (stack)
+    {
+        if (stack->integer == node->integer)
+            return (index);
+        index++;
+        stack = stack->next;
+    }
+    return (index);
+}
+
 /*
     end of libft_functions
 */
@@ -437,22 +454,140 @@ void    ft_rrr(t_ps **stack_a, t_ps **stack_b)
     start of the sorting algorith 
 */
 
+
+/*
+    @return (void)
+    check the cheap cost in stack_a and push it to stack_b
+    how to calculate the cheapest node ?
+    it the combination of the cost of the current node and its target
+    cost = curr_cost + target_cost;
+    cost = how many move to the node the to top of the stack
+*/
+
+    /*
+        check fot the closest begier number to the node->integer 
+    */
+
+
+int ft_count_cost(t_ps *node, t_ps *stack)
+{
+    int cost;
+    int position;
+    int len;
+
+    len = ft_stack_len(stack);
+    position = ft_get_position(node, stack);
+    if (len / 2 >= position)
+		cost = position;
+    else
+        cost = len - position;
+    return (cost);
+}
+   
+t_ps    *ft_search_target(t_ps *node, t_ps  *stack)
+{
+    t_ps    *target;
+    int     dif;
+
+	printf("\n======================search node==========================\n");
+	var_dump_stack(stack, 'x');
+	target = NULL;
+    while (stack)
+    {
+        if (node->integer < stack->integer)
+        {
+            if (!dif)
+            {
+                target = stack;
+                dif = stack->integer - target->integer;
+            }
+            else if (dif > stack->integer - node->integer)
+            {
+                target = stack;
+                dif = stack->integer - node->integer;   
+            } 
+        }
+        stack = stack->next;   
+    }
+	if (target)
+		printf("\n=========>> node:(%d) target:(%d)\n", node->integer, target->integer);
+	printf("\n================================================\n");
+    return (target);
+}
+
+int ft_count_node_cost(t_ps *node, t_ps *stack_a, t_ps *stack_b)
+{
+    int     moves;
+    t_ps    *target;
+	
+	printf("\n======node (%d)=======\n", node->integer);
+   	moves = 0;
+	var_dump_stack(stack_b, 'b');
+	printf("\n========end stack_b==\n");
+	
+    target = ft_search_target(node, stack_b); 
+	if (target)
+	{
+		moves = ft_count_cost(target , stack_b);
+		printf("\n=======>target moves:%d<=======\n", moves);	
+	}
+	else
+		printf("\n>>>>>> target is NULLLLLLL <<<<<<\n");
+	moves += ft_count_cost(node, stack_a);
+	printf("\n=======>cur node moves:%d<=======\n", ft_count_cost(node, stack_a));	
+	printf("\n==============================================================\n");
+    return (moves);
+}
+
+void	ft_push_node(t_ps *node, t_ps **stack_a, t_ps **stack_b)
+{
+	int		position;
+	int		len;
+	t_ps	*target;
+
+	
+	len = ft_stack_len(*stack_a);
+	position = ft_get_position(node, *stack_a);
+	target = ft_search_target(node, *stack_b);
+	
+}
+
 void    ft_push_stack_b(t_ps **stack_a, t_ps **stack_b)
 {
-    
+    t_ps    *t_target_a;
+    t_ps    *t_tmp;
+    t_ps	*t_target_b;
+
+
+    t_target_a = *stack_a;
+    t_target_a->cost = ft_count_node_cost(t_target_a, *stack_a, *stack_b);
+    t_tmp = (*stack_a)->next;
+    while (t_tmp)
+    {
+        if (ft_count_node_cost(t_tmp, *stack_a, *stack_b) < t_target_a->cost)
+            t_target_a = t_tmp;
+        t_tmp = t_tmp->next;
+    }
+	printf("\n==>chosed one (%d): cost (%d)<==\n", t_target_a->integer, t_target_a->cost);
+	// ft_push_node(t_target_a, stack_a, stack_b);
 }
 
 void    ft_push_swap(t_ps **stack_a, t_ps **stack_b)
 {
     ft_pb(stack_a, stack_b, 1);
     ft_pb(stack_a, stack_b, 1);
-    if (! ft_is_sort(stack_b))
+	// var_dump_stack(*stack_a, 'a');
+	// var_dump_stack(*stack_b, 'b');
+    if (! ft_is_sort(*stack_b))
         ft_sb(stack_b, 1);
-    while (ft_stack_len(*stack_a) > 3)
-        ft_push_stack_b(stack_a, stack_b);
-    ft_sort_stack_a(stack_a);
-    ft_push_stack_back_a(stack_a, stack_b);  
+    // while (ft_stack_len(*stack_a) > 3)
+		// printf("\n==>(%d)<==\n", ft_stack_len(*stack_a));
+	ft_push_stack_b(stack_a, stack_b);
+    // ft_sort_stack_a(stack_a);
+    // ft_push_stack_back_a(stack_a, stack_b);  
 }
+
+
 
 /*
     end of sorting stack
@@ -478,6 +613,7 @@ int main(int ac, char **av)
 {
     t_ps    *stack_a;
     t_ps    *stack_b;
+    t_ps    *t_tmp;
     
     stack_a = ft_parse_args(ac , av);
     if(! stack_a) 
@@ -485,8 +621,25 @@ int main(int ac, char **av)
         write(2, "error\n", 6);
         return (1);   
     }
+
+    int     i;
+
+    i = 1;
+    while (i)
+    {
+        ft_pb(&stack_a, &stack_b, 0);
+        i--;
+    }
+    // var_dump_stack(stack_b, 'b');
+    // var_dump_stack(stack_a, 'a');
     if (!ft_is_sort(stack_a))
         ft_push_swap(&stack_a, &stack_b);
+    var_dump_stack(stack_a, 'a');
+    var_dump_stack(stack_b, 'b');
+	
+    // printf("\n==================================\n");
+    // // printf("\n===>cur : (%d)  targert: (%d)<===\n", stack_a->integer , t_tmp->integer);
+    // printf("\n===>cost of node (%d) is ==> (%d)<===\n", stack_a->next->integer , ft_count_node_cost(stack_a->next, stack_a, stack_b));
     ft_free_stack(stack_a);
     return (0);
 }
