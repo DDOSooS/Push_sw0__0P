@@ -6,7 +6,7 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/23 02:58:54 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/23 03:36:11 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -599,6 +599,23 @@ void	ft_second_exec(t_ps *target_a, t_ps *target_b, t_ps **stack_a, t_ps **stack
 			ft_rrb(stack_b, 1);
 }
 
+void    ft_set_moves(t_ps **target, t_ps *stack, int flag)
+{
+    int     len;
+    int     pos;
+
+    len = ft_stack_len(stack);
+    pos = ft_get_position(*target, stack);
+    if (len / 2 > pos && flag)
+        (*target)->ra = pos;
+    else if (len / 2 > pos && !flag)
+        (*target)->rb = pos;
+    else if (flag)
+        (*target)->rra = len - pos;
+    else
+        (*target)->rrb = len - pos;
+}
+
 void    ft_push_stack_b(t_ps **stack_a, t_ps **stack_b)
 {
     t_ps    *target_a;
@@ -606,8 +623,8 @@ void    ft_push_stack_b(t_ps **stack_a, t_ps **stack_b)
 
     target_a = ft_search_cheapest(*stack_a, *stack_b);
     target_b = ft_get_target(target_a, *stack_b);
-	ft_set_moves(&target_a, *stack_a);
-	ft_set_moves(&target_b, *stack_b);
+	ft_set_moves(&target_a, *stack_a, 0);
+	ft_set_moves(&target_b, *stack_b, 1);
 	ft_first_exec(target_a, target_b, stack_a, stack_b);
 	ft_second_exec(target_a, target_b, stack_a, stack_b);
 }
@@ -626,9 +643,9 @@ void    ft_push_swap(t_ps **stack_a, t_ps **stack_b)
     }
     while (ft_stack_len(*stack_a) < 4)
         ft_push_stack_b(stack_a, stack_b);
-    ft_push_sort_three(stack_a);
-    ft_push_stack_a(stack_a, stack_b);
-    ft_sort_stack_a(stack_a);
+    // ft_push_sort_three(stack_a);
+    // ft_push_stack_a(stack_a, stack_b);
+    // ft_sort_stack_a(stack_a);
 }
 
 /*
