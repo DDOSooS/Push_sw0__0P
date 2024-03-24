@@ -6,7 +6,7 @@
 /*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/23 03:36:11 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/24 01:12:21 by aghegrho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ t_ps    *ft_new_node(int number)
 	new->rb = 0;
 	new->rra = 0;
 	new->rrb = 0;
+    new->rr = 0;
+    new->rrr = 0;
     new->next = NULL;
     return (new);
 }
@@ -528,23 +530,24 @@ t_ps    *ft_get_target(t_ps *node, t_ps *stack)
 {
     int		dif;
 	t_ps	*t_target;
-	int		tmp;
-	
+    	
 	dif = 0;
 	t_target = NULL;
 	while (stack)
 	{
 		if (stack->integer < node->integer)
 		{
-			if (dif)
-			{
-				tmp = node->integer - stack->integer;
-				if (dif > tmp)
-					dif = tmp;
-			}
-			else
-				dif = node->integer - stack->integer;
-		}
+            if (! dif)
+            {
+                t_target = stack;
+                dif  = node->integer - stack->integer;
+            }
+		    else if (dif > node->integer - stack->integer)
+            {
+                dif = node->integer - stack->integer;
+                t_target = stack;
+            }
+        }
 		stack = stack->next;
 	}
 	return (t_target);
@@ -559,32 +562,48 @@ void	ft_first_exec(t_ps *target_a, t_ps *target_b, t_ps **stack_a, t_ps **stack_
 {
 	int		n_rep;
 
-	n_rep = 0;
-	if (! target_a->ra && ! target_a->rb)
+    printf("\n===fst exec===\n");
+    if (target_a)
+        printf("Target AAAAAA: %d || ra: %d rra: %d\n", target_a->integer, target_a->ra, target_a->rra);
+    if (target_b) {
+        // ft_set_moves(&target_b, *stack_b, 1);
+        printf("Target BBBBBBBBBBBBBBBBBBBBB: %d || rb: %d rrb: %d\n", target_b->integer, target_b->rb, target_b->rrb);
+    }
+    n_rep = 0;
+	if (!target_b && ! target_a->ra && ! target_a->rb)
 		return ;
-	if (target_a->ra && target_b->rb)
+	if (target_b && target_a->ra && target_b->rb)
 	{
+		// printf("\n=====><<<<<<<<<<<<<both ra & rb >>>>>>>>>>>><====\n");
 		if (target_a->ra > target_b->rb)
 			n_rep = target_b->rb;
 		while (n_rep--)
 			ft_rr(stack_a, stack_b);
 	}
 	if (target_a->ra)
+	{
+		// printf("\n=====><<<<<<<<<<<<<just ra >>>>>>>>>>>><====\n");
 		while (target_a->ra--)
 			ft_ra(stack_a, 1);
-	if (target_b->rb)
+	}
+	if (target_b && target_b->rb)
+	{
 		while (target_b->rb--)
 			ft_rb(stack_b, 1);
+	}
+    // printf("\n===end of fst exec===\n");
 }
 
 void	ft_second_exec(t_ps *target_a, t_ps *target_b, t_ps **stack_a, t_ps **stack_b)
 {
 	int		n_rep;
 
-	if (! target_a->rra && ! target_a->rrb)
+    printf("\n===second exec===\n");
+    // printf("\n==>target_a : (%d) || target_b (%d) || ra(%d) rb(%d) rra(%d) rrb(%d)<==\n", target_a->integer, target_b->integer, target_a->ra, target_b->rb, target_a->rra, target_b->rrb);
+	if (!target_b && ! target_a->rra && ! target_a->rrb)
 		return ;
 	n_rep = 0;
-	if (target_a->rra && target_b->rrb)
+	if ( target_b && target_a->rra && target_b->rrb)
 	{
 		if (target_a->rra > target_b->rrb)
 			n_rep = target_b->rrb;
@@ -594,9 +613,10 @@ void	ft_second_exec(t_ps *target_a, t_ps *target_b, t_ps **stack_a, t_ps **stack
 	if (target_a->rra)
 		while (target_a->rra--)
 			ft_rra(stack_a, 1);
-	if (target_b->rrb)
+	if (target_b && target_b->rrb)
 		while (target_b->rrb--)
 			ft_rrb(stack_b, 1);
+    // printf("\n===end of second exec===\n");
 }
 
 void    ft_set_moves(t_ps **target, t_ps *stack, int flag)
@@ -604,16 +624,28 @@ void    ft_set_moves(t_ps **target, t_ps *stack, int flag)
     int     len;
     int     pos;
 
+    // if (! target)
+    // {
+    // //    printf("\n===>stack is NULL<====\n");
+    // }
     len = ft_stack_len(stack);
     pos = ft_get_position(*target, stack);
-    if (len / 2 > pos && flag)
-        (*target)->ra = pos;
-    else if (len / 2 > pos && !flag)
+    // printf("\n==>pos: %d<==\n", pos);
+    // printf("\n==>pos: %d<==\n", len);
+    // printf("\n=========================set moves==============================\n");
+    if (len / 2 >= pos && flag)
         (*target)->rb = pos;
+    else if (len / 2 >= pos && !flag)
+        (*target)->ra = pos;
     else if (flag)
-        (*target)->rra = len - pos;
-    else
         (*target)->rrb = len - pos;
+    else
+        (*target)->rra = len - pos;
+
+//  printf("Target: %d || ra: %d rb: %d rra: %d rrb: %d\n",
+        //    (*target)->integer, (*target)->ra, (*target)->rb, (*target)->rra, (*target)->rrb);
+
+    // printf("\n=========================set moves==============================\n");
 }
 
 void    ft_push_stack_b(t_ps **stack_a, t_ps **stack_b)
@@ -623,10 +655,26 @@ void    ft_push_stack_b(t_ps **stack_a, t_ps **stack_b)
 
     target_a = ft_search_cheapest(*stack_a, *stack_b);
     target_b = ft_get_target(target_a, *stack_b);
-	ft_set_moves(&target_a, *stack_a, 0);
-	ft_set_moves(&target_b, *stack_b, 1);
+     ft_set_moves(&target_a, *stack_a, 0);
+    // printf("\n============++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++===============\n");
+    if (target_a)
+        // printf("Target A: %d || ra: %d rra: %d\n", target_a->integer, target_a->ra, target_a->rra);
+    if (target_b) {
+        ft_set_moves(&target_b, *stack_b, 1);
+        // printf("Target BBBBBBBBBBBBBBBBBBBBB: %d || rb: %d rrb: %d\n", target_b->integer, target_b->rb, target_b->rrb);
+    }
+    // printf("\n============++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++===============\n");
+    
 	ft_first_exec(target_a, target_b, stack_a, stack_b);
 	ft_second_exec(target_a, target_b, stack_a, stack_b);
+    ft_pb(stack_a, stack_b, 1);
+    if (! target_b)
+        ft_rb(stack_b, 1);
+
+    // printf("\n============++++++++++===============\n");
+    // var_dump_stack(*stack_b, 'b');
+    // var_dump_stack(*stack_a, 'a');
+    // printf("\n================================\n");
 }
 
 void    ft_push_swap(t_ps **stack_a, t_ps **stack_b)
@@ -641,7 +689,7 @@ void    ft_push_swap(t_ps **stack_a, t_ps **stack_b)
             ft_pb(stack_a, stack_b, 1);
         }
     }
-    while (ft_stack_len(*stack_a) < 4)
+    while (ft_stack_len(*stack_a) > 3)
         ft_push_stack_b(stack_a, stack_b);
     // ft_push_sort_three(stack_a);
     // ft_push_stack_a(stack_a, stack_b);
