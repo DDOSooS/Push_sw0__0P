@@ -6,7 +6,7 @@
 /*   By: wzon <wzon@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/25 22:37:27 by wzon             ###   ########.fr       */
+/*   Updated: 2024/03/25 22:41:32 by wzon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -794,11 +794,11 @@ int main(int ac, char **av)
     printf("\n==================before===============\n");
     var_dump_stack(stack_b, 'b');
     var_dump_stack(stack_a, 'a');
-    // printf("\n================================\n");
-    // if (!ft_is_sort(stack_a))
-    //     ft_push_swap(&stack_a, &stack_b);
-    // printf("\n=================after===============\n");
-	ft_sort_three(&stack_a);
+    printf("\n================================\n");
+    if (!ft_is_sorted(stack_a))
+        ft_push_swap(&stack_a, &stack_b);
+    printf("\n=================after===============\n");
+	// ft_sort_three(&stack_a);
     var_dump_stack(stack_a, 'a');
     var_dump_stack(stack_b, 'b');
     printf("\n================================\n");
