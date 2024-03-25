@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ps.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
+/*   By: wzon <wzon@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/24 01:12:21 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/25 22:37:27 by wzon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,21 +108,18 @@ t_ps    *ft_last_node(t_ps *list)
     return (list);
 }
 
-int ft_is_sort(t_ps *stack)
+int ft_is_sorted(t_ps *stack)
 {
     t_ps    *cur;
-    t_ps    *prev;
 
     if (! stack)
       return (0);
-    prev = stack;
-    cur = stack->next;
+    cur = stack;
     while (cur->next)
     {
-        if (prev->integer > cur->integer)
+        if (cur->integer > cur->next->integer)
             return (0);
         cur = cur->next;
-        prev = prev->next;
     }
     return (1);
 }
@@ -677,23 +674,86 @@ void    ft_push_stack_b(t_ps **stack_a, t_ps **stack_b)
     // printf("\n================================\n");
 }
 
+int ft_get_max_position(t_ps *stack)
+{
+    t_ps    *t_tmp;
+    t_ps    *t_max;
+
+    t_max = stack;
+    t_tmp = stack->next;
+    while (t_tmp)
+    {
+        if (t_max->integer < t_tmp->integer)
+            t_max = t_tmp;
+        t_tmp = t_tmp->next;
+    }
+    return (ft_get_position(t_max, stack));
+}
+
+int ft_get_min_position(t_ps *stack)
+{
+    t_ps    *t_tmp;
+    t_ps    *t_min;
+
+    t_min = stack;
+    t_tmp = stack->next;
+    while (t_tmp)
+    {
+        if (t_min->integer > t_tmp->integer)
+            t_min = t_tmp;
+        t_tmp = t_tmp->next;
+    }
+    return (ft_get_position(t_min, stack));
+}
+
+
+int ft_check_stack_status(t_ps *stack)
+{
+    int status;
+    int min;
+    int max;
+
+    min = ft_get_min_position(stack);
+    max = ft_get_max_position(stack);
+    if (max  == 1 && min == 1)
+        status = 5;
+    else if (max == 0 && min == 2)
+        status = 4;
+    else if(max == 1 && min == 2)
+        status = 3;
+    else if (max == 0 && min == 1)
+        status = 2;
+    else if (max == 2 && min == 1)
+        status = 1;
+    return (status);
+}
+
+void    ft_sort_three(t_ps **stack_a)
+{
+    int status;
+
+    if ( ft_is_sorted(*stack_a))
+    {
+        printf("yes it's sorted");
+        var_dump_stack(*stack_a, '1');
+        return ;
+    }
+    status = ft_check_stack_status(*stack_a);
+    if (status == 1 || status  == 4 || status == 5)
+        ft_sa(stack_a, 1);
+    else if (status == 2)
+        ft_ra(stack_a, 1);
+    else if (status == 3)
+        ft_rra(stack_a, 1);
+    return (ft_sort_three(stack_a));
+}
+
 void    ft_push_swap(t_ps **stack_a, t_ps **stack_b)
 {
-    if (!*stack_b)
-    {
-        if (ft_stack_len(*stack_a) == 4)
-            ft_pb(stack_a, stack_a, 1);
-        else
-        {
-            ft_pb(stack_a, stack_b, 1);
-            ft_pb(stack_a, stack_b, 1);
-        }
-    }
     while (ft_stack_len(*stack_a) > 3)
-        ft_push_stack_b(stack_a, stack_b);
-    // ft_push_sort_three(stack_a);
-    // ft_push_stack_a(stack_a, stack_b);
-    // ft_sort_stack_a(stack_a);
+		ft_pb(stack_a, stack_b, 1);
+    ft_sort_three(stack_a);
+	
 }
 
 /*
@@ -734,10 +794,11 @@ int main(int ac, char **av)
     printf("\n==================before===============\n");
     var_dump_stack(stack_b, 'b');
     var_dump_stack(stack_a, 'a');
-    printf("\n================================\n");
-    if (!ft_is_sort(stack_a))
-        ft_push_swap(&stack_a, &stack_b);
-    printf("\n=================after===============\n");
+    // printf("\n================================\n");
+    // if (!ft_is_sort(stack_a))
+    //     ft_push_swap(&stack_a, &stack_b);
+    // printf("\n=================after===============\n");
+	ft_sort_three(&stack_a);
     var_dump_stack(stack_a, 'a');
     var_dump_stack(stack_b, 'b');
     printf("\n================================\n");
