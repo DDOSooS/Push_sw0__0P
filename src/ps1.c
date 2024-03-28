@@ -6,7 +6,7 @@
 /*   By: wzon <wzon@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/28 05:34:20 by wzon             ###   ########.fr       */
+/*   Updated: 2024/03/28 20:04:18 by wzon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,8 @@ int ft_check_number(char *number)
     i = 0;
     if (number[0] == '-' || number[0] == '+')
         i++;
+    if (! number[i])
+        return (0);
     while (number[i])
     {
         if (!ft_is_degit(number[i]))
