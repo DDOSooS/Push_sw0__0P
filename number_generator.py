@@ -12,8 +12,8 @@ def generate_unique_numbers(n, lower_bound, upper_bound):
     return list(unique_numbers)
 
 # Example usage:
-n = 500  # Number of unique random numbers to generate
-lower_bound = 1  # Lower bound of the range
+n = 100  # Number of unique random numbers to generate
+lower_bound = 0  # Lower bound of the range
 upper_bound = 1000000000  # Upper bound of the range
 
 unique_numbers = generate_unique_numbers(n, lower_bound, upper_bound)

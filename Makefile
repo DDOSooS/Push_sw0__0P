@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 RM = rm -rf
 
-SRC = src/ps.c libft/ft_split.c
+SRC = src/ps1.c libft/ft_split.c
 
 OBJ = $(SRC:.c=.o)
 

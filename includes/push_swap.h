@@ -6,7 +6,7 @@
 /*   By: wzon <wzon@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:30:07 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/26 00:45:29 by wzon             ###   ########.fr       */
+/*   Updated: 2024/03/28 00:33:01 by wzon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,6 @@ typedef struct push_swap
 	int					integer;
 	int					cost;
 	int					midpoint;
-	int					sa;
-	int					sb;
-	int					ss;
-	int					pa;
-	int					pb;
-	int					ra;
-	int					rb;
-	int					rr;
-	int					rra;
-	int					rrb;
-	int					rrr;
 	struct push_swap	*next;
 	// struct push_swap	*prev;
 }	t_ps;
