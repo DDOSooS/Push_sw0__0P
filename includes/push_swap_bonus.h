@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.h                                        :+:      :+:    :+:   */
+/*   push_swap_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wzon <wzon@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/06 16:30:07 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/30 08:14:58 by wzon             ###   ########.fr       */
+/*   Created: 2024/03/30 08:08:53 by wzon              #+#    #+#             */
+/*   Updated: 2024/03/30 08:16:40 by wzon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PUSH_SWAP_H
-# define PUSH_SWAP_H
+#ifndef PUSH_SWAP_BONUS_H
+# define PUSH_SWAP_BONUS_H
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -29,10 +29,7 @@ typedef struct push_swap
 	// struct push_swap	*prev;
 }	t_ps;
 
-
-
-
-
+# define BUFFER_SIZE 40
 /*
    parsing functions
 */
@@ -79,28 +76,21 @@ void    ft_rrr(t_ps **stack_a, t_ps **stack_b, int flag);
 	end of push_swap_commands
 */
 
+int		ft_is_sorted(t_ps *stack);
+
 
 /*
-	sorting_algorithm
+	get_next_line functions
 */
-void	ft_finish_exec(t_ps *cheapest, t_ps *target, t_ps **a, t_ps **b);
-int		ft_min(int a, int b);
-int		ft_max(int a, int b);
-t_ps	*ft_get_max(t_ps *stack);
-t_ps	*ft_get_min(t_ps *stack);
-t_ps    *ft_get_target(t_ps *node, t_ps *stack, int flag);
-t_ps    *ft_search_cheapest(t_ps *a, t_ps *b);
-int		ft_count_cost(t_ps *node, t_ps *a, t_ps *b);
-int		ft_calculate_cost(t_ps *node, t_ps *stack);
-int		ft_chek_mid_point(t_ps *node, t_ps *stack);
-void    ft_sort_three(t_ps **stack);
-int		ft_get_position(t_ps *node, t_ps *stack);
-int		ft_stack_len(t_ps *stack);
-int		ft_is_sorted(t_ps *stack);
-t_ps    *ft_get_closest_bigger(t_ps *node, t_ps *stack);
-t_ps    *ft_get_closest_smaller(t_ps *node, t_ps *stack);
+
+char	*get_next_line(int fd);
+int		ft_strlen(char *str);
+int		check_end_line(char *str);
+char	*str_sub(char *str, int len);
+
 /*
-	end of sorting algo functions
+	end of get_next_line functions
 */
+
 
 #endif

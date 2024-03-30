@@ -6,11 +6,11 @@
 /*   By: wzon <wzon@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 11:57:08 by aghergho          #+#    #+#             */
-/*   Updated: 2024/03/29 01:42:53 by wzon             ###   ########.fr       */
+/*   Updated: 2024/03/30 08:14:42 by wzon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/push_swap.h"
+#include "../includes/push_swap_bonus.h"
 
 char	*edit_line(char *str, int len, char **g_line)
 {

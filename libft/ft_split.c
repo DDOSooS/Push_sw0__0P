@@ -3,24 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghegrho < aghergho@student.1337.ma>       +#+  +:+       +#+        */
+/*   By: wzon <wzon@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 17:20:06 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/18 22:32:45 by aghegrho         ###   ########.fr       */
+/*   Updated: 2024/03/30 06:35:36 by wzon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/push_swap.h"
-
-int ft_strlen(char *str)
-{
-    int i;
-
-    i = 0;
-    while (str[i])
-        i++;
-    return (i);
-}
 
 void    ft_free_mem(char **av)
 {
