@@ -6,7 +6,7 @@
 /*   By: wzon <wzon@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/28 02:27:19 by wzon             ###   ########.fr       */
+/*   Updated: 2024/03/29 03:31:50 by wzon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -838,6 +838,8 @@ int main(int ac, char **av)
     t_ps    *stack_b;
     t_ps    *t_tmp;
 
+    if (ac == 1)
+        return (1);
     stack_b = NULL;
     stack_a = ft_parse_args(ac , av);
     if(! stack_a)
@@ -845,20 +847,8 @@ int main(int ac, char **av)
         write(2, "error\n", 6);
         return (1);
     }
-    // printf("\n==================before===============\n");
-    // var_dump_stack(stack_b, 'b');
-    // var_dump_stack(stack_a, 'a');
-    // printf("\n================================\n");
-    // printf("\n=========len (%d)=====\n", ft_stack_len(stack_a));
     if (!ft_is_sorted(stack_a))
         ft_push_swap(&stack_a, &stack_b);
-    // while (ft_stack_len(stack_a) > 3)
-		// ft_pb(&stack_a, &stack_b, 1);
-	// ft_sort_three(&stack_a);
-    // printf("\n=================after===============\n");
-    // var_dump_stack(stack_a, 'a');
-    // var_dump_stack(stack_b, 'b');
-    // printf("\n================================\n");
     if (! ft_is_sorted(stack_a))
         printf("\n=============>DM NOT SORTED ;( <========\n");
     ft_free_stack(&stack_a);
