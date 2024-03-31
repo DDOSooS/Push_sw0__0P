@@ -6,11 +6,23 @@
 /*   By: wzon <wzon@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 16:34:45 by aghegrho          #+#    #+#             */
-/*   Updated: 2024/03/30 07:36:53 by wzon             ###   ########.fr       */
+/*   Updated: 2024/03/31 11:50:00 by wzon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/push_swap.h"
+
+void    var_dump_stack(t_ps *stack, char c)
+{
+    printf("\n====>stack (%c) <====\n", c);
+    while (stack)
+    {
+        printf("===> (%d) <==\n", stack->integer);
+        stack = stack->next;
+    }
+    
+}
+
 
 void    ft_set_up_node(t_ps *cheapest, t_ps *target, t_ps **a, t_ps **b)
 {
@@ -92,7 +104,9 @@ void    ft_push_swap(t_ps **a, t_ps **b)
         // var_dump_stack(*b, 'b');
         // printf("\n================================\n");
         cheapest = ft_search_cheapest(*a, *b);
+        // printf("\n==>chepeast is (%d) <==\n", cheapest->integer);
         target = ft_get_target(cheapest , *b, 0);
+        // printf("\n==>target is (%d) diffirence (%d)<==\n", target->integer, cheapest->integer - target->integer);
         ft_set_up_node(cheapest, target, a, b);
         ft_pb(a, b, 1);
         // printf("\n==================after===============\n");
@@ -117,7 +131,7 @@ int main(int ac, char **av)
     stack_a = ft_parse_args(ac , av);
     if(! stack_a)
     {
-        write(2, "error\n", 6);
+        write(2, "Error\n", 6);
         return (1);
     }
     // printf("\n==================before===============\n");
@@ -126,12 +140,12 @@ int main(int ac, char **av)
     // printf("\n================================\n");
     if (!ft_is_sorted(stack_a))
         ft_push_swap(&stack_a, &stack_b);
-    // printf("\n=================after===============\n");
+    // printf("\n================= after push__swap ===============\n");
     // var_dump_stack(stack_a, 'a');
     // var_dump_stack(stack_b, 'b');
     // printf("\n================================\n");
-    // if (! ft_is_sorted(stack_a))
-    //     printf("\n========> DM NOT SORTED ;( <========\n");
+    if (! ft_is_sorted(stack_a))
+        printf("\n========> DM NOT SORTED ;( <========\n");
     ft_free_stack(&stack_a);
     ft_free_stack(&stack_b);
     return (0);

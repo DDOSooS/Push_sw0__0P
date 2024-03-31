@@ -14,8 +14,8 @@ def generate_unique_numbers(n, lower_bound, upper_bound):
 
 def test_program(num_tests):
     n = 500  # Number of unique random numbers to generate
-    lower_bound = -101002000  # Lower bound of the range
-    upper_bound = 100102000
+    lower_bound = -2147483648  # Lower bound of the range
+    upper_bound = 2147483647
     total_moves = 0
     for _ in range(num_tests):
         unique_numbers = generate_unique_numbers(n, lower_bound, upper_bound)
@@ -36,5 +36,5 @@ def test_program(num_tests):
     print(f"\nAverage number of moves over {num_tests} tests: {average_moves}")
 
 if __name__ == "__main__":
-    num_tests = 100  # Number of tests to run
+    num_tests = 200  # Number of tests to run
     test_program(num_tests)
